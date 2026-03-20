@@ -1353,3 +1353,10 @@ pub struct SplitAmountInfo {
     pub reward_0: u64,
     pub reward_1: u64,
 }
+
+#[derive(Debug, Clone, Copy)]
+pub struct SimulateSwapResult2 {
+    pub swap_result2: SwapResult2,
+    pub new_pool: Pool,
+    pub is_update: bool,
+}

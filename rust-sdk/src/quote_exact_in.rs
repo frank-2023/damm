@@ -5,6 +5,7 @@ use cp_amm::{
     params::swap::TradeDirection,
     state::{fee::FeeMode, Pool, SwapResult2},
 };
+use cp_amm::state::SimulateSwapResult2;
 
 pub fn get_quote(
     pool: &Pool,
@@ -43,7 +44,7 @@ pub fn get_quote_simulate(
     actual_amount_in: u64,
     a_to_b: bool,
     has_referral: bool,
-) -> Result<Pool> {
+) -> Result<SimulateSwapResult2> {
     ensure!(actual_amount_in > 0, "amount is zero");
 
     let current_point = get_current_point(pool.activation_type, current_slot, current_timestamp)?;
@@ -65,8 +66,26 @@ pub fn get_quote_simulate(
     ) {
         Ok(quote) => {
             pool.apply_swap_result(&quote,fee_mode,current_timestamp);
-            Ok(pool.clone())
+            Ok(SimulateSwapResult2{
+                swap_result2: quote,
+                new_pool: *pool,
+                is_update: true,
+            })
         }
-        Err(e) => Ok(pool.clone()),
+        Err(e) => Ok(SimulateSwapResult2{
+            swap_result2: SwapResult2{
+                included_fee_input_amount: 0,
+                excluded_fee_input_amount: 0,
+                amount_left: 0,
+                output_amount: 0,
+                next_sqrt_price: 0,
+                trading_fee: 0,
+                protocol_fee: 0,
+                partner_fee: 0,
+                referral_fee: 0,
+            },
+            new_pool: *pool,
+            is_update: false,
+        }),
     }
 }
