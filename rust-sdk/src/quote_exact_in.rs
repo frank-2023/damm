@@ -38,7 +38,7 @@ pub fn get_quote(
 }
 
 pub fn get_quote_simulate(
-    mut pool: &mut Pool,
+    old_pool: &Pool,
     current_timestamp: u64,
     current_slot: u64,
     actual_amount_in: u64,
@@ -46,10 +46,10 @@ pub fn get_quote_simulate(
     has_referral: bool,
 ) -> Result<SimulateSwapResult2> {
     ensure!(actual_amount_in > 0, "amount is zero");
-
+    let mut pool = old_pool.clone();
     let current_point = get_current_point(pool.activation_type, current_slot, current_timestamp)?;
 
-    ensure!(is_swap_enable(pool, current_point)?, "Swap is disabled");
+    ensure!(is_swap_enable(&pool, current_point)?, "Swap is disabled");
 
     let trade_direction = if a_to_b {
         TradeDirection::AtoB
@@ -68,7 +68,7 @@ pub fn get_quote_simulate(
             pool.apply_swap_result(&quote,fee_mode,current_timestamp);
             Ok(SimulateSwapResult2{
                 swap_result2: quote,
-                new_pool: *pool,
+                new_pool: pool,
                 is_update: true,
             })
         }
@@ -84,7 +84,7 @@ pub fn get_quote_simulate(
                 partner_fee: 0,
                 referral_fee: 0,
             },
-            new_pool: *pool,
+            new_pool: pool,
             is_update: false,
         }),
     }
