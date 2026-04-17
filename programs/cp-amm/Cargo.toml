@@ -29,6 +29,7 @@ num_enum = "0.7.0"
 num = "0.4.3"
 spl-token-metadata-interface = { version = "=0.6.0" }
 const-crypto = "0.3.0"
+serde = { version = "1.0.219", features = ["derive"] }
 
 [dev-dependencies]
 proptest = "1.2.0"

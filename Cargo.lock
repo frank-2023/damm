@@ -741,6 +741,7 @@ dependencies = [
  "num_enum",
  "proptest",
  "ruint",
+ "serde",
  "spl-token-metadata-interface",
  "static_assertions",
 ]

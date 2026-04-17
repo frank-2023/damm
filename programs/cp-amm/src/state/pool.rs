@@ -96,8 +96,9 @@ pub enum PoolVersion {
     V1, // 1
 }
 
+use serde::{Deserialize, Serialize};
 #[account(zero_copy)]
-#[derive(InitSpace, Debug, Default)]
+#[derive(InitSpace, Debug, Default,Serialize, Deserialize)]
 pub struct Pool {
     /// Pool fee
     pub pool_fees: PoolFeesStruct,
@@ -168,7 +169,7 @@ pub struct Pool {
 const_assert_eq!(Pool::INIT_SPACE, 1104);
 
 #[zero_copy]
-#[derive(Debug, InitSpace, Default)]
+#[derive(Debug, InitSpace, Default,Serialize, Deserialize)]
 pub struct PoolMetrics {
     pub total_lp_a_fee: u128,
     pub total_lp_b_fee: u128,
@@ -213,7 +214,7 @@ impl PoolMetrics {
 
 /// Stores the state relevant for tracking liquidity mining rewards
 #[zero_copy]
-#[derive(InitSpace, Default, Debug, PartialEq)]
+#[derive(InitSpace, Default, Debug, PartialEq,Serialize, Deserialize)]
 pub struct RewardInfo {
     /// Indicates if the reward has been initialized
     pub initialized: u8,

@@ -1,5 +1,6 @@
 use anchor_lang::prelude::*;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
+use serde::{Deserialize, Serialize};
 use static_assertions::const_assert_eq;
 
 use crate::{
@@ -52,7 +53,7 @@ pub enum BaseFeeMode {
 /// protocol_fee = trading_fee * protocol_fee_percentage / 100
 /// referral_fee = protocol_fee * referral_percentage / 100
 /// partner_fee = (protocol_fee - referral_fee) * partner_fee_percentage / denominator
-#[derive(Debug, InitSpace, Default)]
+#[derive(Debug, InitSpace, Default,Serialize, Deserialize)]
 pub struct PoolFeesStruct {
     /// Trade fees are extra token amounts that are held inside the token
     /// accounts during a trade, making the value of liquidity tokens rise.
@@ -81,7 +82,7 @@ pub struct PoolFeesStruct {
 const_assert_eq!(PoolFeesStruct::INIT_SPACE, 160);
 
 #[zero_copy]
-#[derive(Debug, InitSpace, Default)]
+#[derive(Debug, InitSpace, Default,Serialize, Deserialize)]
 pub struct BaseFeeStruct {
     pub cliff_fee_numerator: u64,
     // In fee scheduler first_factor: number_of_period, second_factor: period_frequency, third_factor: reduction_factor
@@ -298,7 +299,7 @@ impl PoolFeesStruct {
 }
 
 #[zero_copy]
-#[derive(Debug, InitSpace, Default)]
+#[derive(Debug, InitSpace, Default,Serialize, Deserialize)]
 pub struct DynamicFeeStruct {
     pub initialized: u8, // 0, ignore for dynamic fee
     pub padding: [u8; 7],
